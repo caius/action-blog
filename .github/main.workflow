@@ -40,6 +40,9 @@ action "only run on master" {
 
 action "publish site" {
   uses    = "./.github/action/gh-pages-publish"
-  needs = ["build site", "only run on master"]
-  secrets = ["GITHUB_TOKEN"]
+  needs = [
+    "build site",
+    "only run on master"
+  ]
+  /*secrets = ["GITHUB_TOKEN"]*/
 }
