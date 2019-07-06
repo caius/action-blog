@@ -34,5 +34,5 @@ action "publish site" {
     "build site",
     "only run on master"
   ]
-  /*secrets = ["GITHUB_TOKEN"]*/
+  secrets = ["GITHUB_TOKEN"]
 }
