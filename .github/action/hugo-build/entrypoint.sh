@@ -14,8 +14,5 @@ apk update && apk add git
   rm "hugo_${HUGO_VERSION}_Linux-64bit.tar.gz"
 )
 
-# Make sure all submodules are grabbed
-git submodule update --init
-
 # Build the site
 $HOME/hugo
