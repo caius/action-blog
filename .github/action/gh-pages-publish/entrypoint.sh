@@ -2,18 +2,20 @@
 
 set -eu
 
-apk update && apk add git
-
-publish_path="${GITHUB_WORKSPACE}/public"
-publish_branch="gh-pages"
-
-# Create this for the first time with
+# Publish branch needs initially creating with
 #
 #     git checkout --orphan gh-pages
 #     git reset
 #     git commit --allow-empty "Start of branch"
 #     git push
 
+publish_path="${GITHUB_WORKSPACE}/public"
+publish_branch="gh-pages"
+
+# Install dependencies
+apk update && apk add git
+
+# Publish!
 cd "${GITHUB_WORKSPACE}"
 git checkout "${publish_branch}"
 
