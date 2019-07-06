@@ -23,21 +23,23 @@ action "build site" {
 }
 
 /* Publish on master */
-/*workflow "on master merge, publish site" {
+workflow "on master merge, publish site" {
   on = "push"
 
   resolves = [
     "only run on master",
-    "build and publish site",
+    "build site",
+    "publish site",
   ]
-}*/
+}
 
-/*action "only run on master" {
+action "only run on master" {
   uses = "actions/bin/filter@master"
-  args = "branch master"
-}*/
+  args = "branch setup" # FIXME: change to master
+}
 
-/*action "update-readme" {
-  uses    = "./.github/actions/update-readme"
+action "publish site" {
+  uses    = "./.github/action/gh-pages-publish"
+  needs = ["build site", "only run on master"]
   secrets = ["GITHUB_TOKEN"]
-}*/
+}
