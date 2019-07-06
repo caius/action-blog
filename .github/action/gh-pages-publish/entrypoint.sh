@@ -4,9 +4,6 @@ set -eu
 
 publish_path="${GITHUB_WORKSPACE}/public"
 publish_branch="gh-pages"
-staging_path="$(mktemp -d -t publish)"
-
-cp -r "${publish_path}/" "${staging_path}/"
 
 # Create this for the first time with
 #
@@ -18,4 +15,9 @@ cp -r "${publish_path}/" "${staging_path}/"
 cd "${GITHUB_WORKSPACE}"
 git checkout "${publish_branch}"
 
-cp "${staging_path}"
+cp -r "${publish_path}/" .
+rm -r "${publish_path}"
+
+git add --all
+git -c user.name="ActionBot" -c user.email="actionbot@localhost" commit --message "Publish site from ${GITHUB_SHA}"
+git push origin "${publish_branch}"
