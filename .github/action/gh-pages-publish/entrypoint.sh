@@ -2,7 +2,7 @@
 
 set -eu
 
-apt update && apk add git
+apk update && apk add git
 
 publish_path="${GITHUB_WORKSPACE}/public"
 publish_branch="gh-pages"
