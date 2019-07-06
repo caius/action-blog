@@ -17,7 +17,8 @@ publish_branch="gh-pages"
 cd "${GITHUB_WORKSPACE}"
 git checkout "${publish_branch}"
 
-cp -r "${publish_path}/" . || true
+# Copy the contents of $publish_path into pwd
+find public -mindepth 1 -exec cp -r {} . \;
 rm -r "${publish_path}"
 
 git add --all
