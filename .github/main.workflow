@@ -9,28 +9,18 @@ action "branch cleanup" {
   secrets = ["GITHUB_TOKEN"]
 }
 
-/* Build on any other branch to make sure site works */
-workflow "build site for every push" {
+workflow "build site, publish from master" {
   on = "push"
 
   resolves = [
     "build site",
+    "only run on master",
+    "publish site",
   ]
 }
 
 action "build site" {
   uses = "./.github/action/hugo-build"
-}
-
-/* Publish on master */
-workflow "on master merge, publish site" {
-  on = "push"
-
-  resolves = [
-    "only run on master",
-    "build site",
-    "publish site",
-  ]
 }
 
 action "only run on master" {
