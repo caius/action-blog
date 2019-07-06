@@ -17,7 +17,7 @@ publish_branch="gh-pages"
 cd "${GITHUB_WORKSPACE}"
 git checkout "${publish_branch}"
 
-cp -r "${publish_path}/" .
+cp -r "${publish_path}/" . || true
 rm -r "${publish_path}"
 
 git add --all
