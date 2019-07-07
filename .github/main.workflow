@@ -19,19 +19,20 @@ action "is-branch-master" {
   args = "branch master"
 }
 
-action "is-not-branch-deleted" {
-  uses = "actions/bin/filter@master"
-  args = "not deleted"
-}
-
 action "build" {
   needs = "is-not-branch-deleted"
   uses = "peaceiris/actions-hugo@v0.55.6-1"
   args = ["--gc", "--minify", "--cleanDestinationDir"]
 }
 
+action "is-not-branch-deleted" {
+  needs = "build"
+  uses = "actions/bin/filter@master"
+  args = "not deleted"
+}
+
 action "deploy" {
-  needs = ["is-branch-master", "build"]
+  needs = "is-branch-master"
   uses = "peaceiris/actions-gh-pages@v1.0.1"
   env = {
     PUBLISH_DIR = "./public"
