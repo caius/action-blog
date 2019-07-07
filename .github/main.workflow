@@ -27,15 +27,23 @@ action "build site" {
   needs = "not master branch"
 }
 
+workflow "publish from master" {
+  on = "push"
+
+  resolves = [
+    "only run on master",
+    "publish site",
+  ]
+}
+
 action "only run on master" {
   uses = "actions/bin/filter@master"
   args = "branch setup" # FIXME: change to master
 }
 
 action "publish site" {
-  uses    = "./.github/action/gh-pages-publish"
+  uses    = "./.github/action/hugo-pages-publish"
   needs = [
-    "build site",
     "only run on master"
   ]
   secrets = ["GITHUB_TOKEN"]
