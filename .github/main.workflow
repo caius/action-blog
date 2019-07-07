@@ -9,6 +9,7 @@ action "branch cleanup" {
   secrets = ["GITHUB_TOKEN"]
 }
 
+/* Anything but master gets built to make sure it compiles */
 workflow "build on any branch" {
   on = "push"
   resolves = [
@@ -19,7 +20,7 @@ workflow "build on any branch" {
 
 action "not master branch" {
   uses = "actions/bin/filter@master"
-  args = "not branch setup" # FIXME: master
+  args = "not branch master"
 }
 
 action "build site" {
@@ -27,6 +28,7 @@ action "build site" {
   needs = "not master branch"
 }
 
+/* Anything merged to master is published live */
 workflow "publish from master" {
   on = "push"
 
@@ -38,7 +40,7 @@ workflow "publish from master" {
 
 action "only run on master" {
   uses = "actions/bin/filter@master"
-  args = "branch setup" # FIXME: change to master
+  args = "branch master"
 }
 
 action "publish site" {
