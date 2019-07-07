@@ -35,6 +35,6 @@ $HOME/hugo
 (
   cd "${PUBLISH_FOLDER}"
   git add --all
-  git -c user.name="ActionBot" -c user.email="actionbot@localhost" commit --message "Publish site from ${GITHUB_SHA}"
+  git -c user.name="ActionBot" -c user.email="actionbot@localhost" commit --message "Publish site from ${GITHUB_SHA}" --allow-empty
   git push origin "${PUBLISH_BRANCH}"
 )
