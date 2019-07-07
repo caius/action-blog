@@ -14,9 +14,9 @@ workflow "GitHub Pages" {
   resolves = ["deploy"]
 }
 
-action "is-branch-master" {
+action "is-not-branch-deleted" {
   uses = "actions/bin/filter@master"
-  args = "branch master"
+  args = "not deleted"
 }
 
 action "build" {
@@ -25,10 +25,10 @@ action "build" {
   args = ["--gc", "--minify", "--cleanDestinationDir"]
 }
 
-action "is-not-branch-deleted" {
+action "is-branch-master" {
   needs = "build"
   uses = "actions/bin/filter@master"
-  args = "not deleted"
+  args = "branch master"
 }
 
 action "deploy" {
