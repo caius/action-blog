@@ -9,13 +9,32 @@ action "branch cleanup" {
   secrets = ["GITHUB_TOKEN"]
 }
 
-/* Build and publish on master */
-workflow "on master merge, build and publish" {
+/* Anything but master gets built to make sure it compiles */
+workflow "build on any branch" {
+  on = "push"
+  resolves = [
+    "not master branch",
+    "build site"
+  ]
+}
+
+action "not master branch" {
+  uses = "actions/bin/filter@master"
+  args = "not branch master"
+}
+
+action "build site" {
+  uses = "./.github/action/hugo-build"
+  needs = "not master branch"
+}
+
+/* Anything merged to master is published live */
+workflow "publish from master" {
   on = "push"
 
   resolves = [
     "only run on master",
-    /*"build and publish site",*/
+    "publish site",
   ]
 }
 
@@ -24,7 +43,10 @@ action "only run on master" {
   args = "branch master"
 }
 
-/*action "update-readme" {
-  uses    = "./.github/actions/update-readme"
+action "publish site" {
+  uses    = "./.github/action/hugo-pages-publish"
+  needs = [
+    "only run on master"
+  ]
   secrets = ["GITHUB_TOKEN"]
-}*/
+}
