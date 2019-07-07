@@ -1,4 +1,4 @@
 theme = "hyde"
-baseURL = "http://caius.github.io/action-blog/"
+baseURL = "https://caius.github.io/action-blog/"
 languageCode = "en-gb"
 title = "Action Blog"
