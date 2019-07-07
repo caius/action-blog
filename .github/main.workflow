@@ -1,52 +1,42 @@
 /* Tidy up merged branches */
 workflow "on pull request merge, delete the branch" {
   on       = "pull_request"
-  resolves = ["branch cleanup"]
+  resolves = ["branch-cleanup"]
 }
 
-action "branch cleanup" {
+action "branch-cleanup" {
   uses    = "jessfraz/branch-cleanup-action@master"
   secrets = ["GITHUB_TOKEN"]
 }
 
-/* Anything but master gets built to make sure it compiles */
-workflow "build on any branch" {
+workflow "GitHub Pages" {
   on = "push"
-  resolves = [
-    "not master branch",
-    "build site"
-  ]
+  resolves = ["deploy"]
 }
 
-action "not master branch" {
+action "is-not-branch-deleted" {
   uses = "actions/bin/filter@master"
-  args = "not branch master"
+  args = "not deleted"
 }
 
-action "build site" {
-  uses = "./.github/action/hugo-build"
-  needs = "not master branch"
+action "build" {
+  needs = "is-not-branch-deleted"
+  uses = "peaceiris/actions-hugo@v0.55.6-1"
+  args = ["--gc", "--minify", "--cleanDestinationDir"]
 }
 
-/* Anything merged to master is published live */
-workflow "publish from master" {
-  on = "push"
-
-  resolves = [
-    "only run on master",
-    "publish site",
-  ]
-}
-
-action "only run on master" {
+action "is-branch-master" {
+  needs = "build"
   uses = "actions/bin/filter@master"
   args = "branch master"
 }
 
-action "publish site" {
-  uses    = "./.github/action/hugo-pages-publish"
-  needs = [
-    "only run on master"
-  ]
-  secrets = ["GITHUB_TOKEN"]
+action "deploy" {
+  needs = "is-branch-master"
+  uses = "peaceiris/actions-gh-pages@v1.0.1"
+  env = {
+    PUBLISH_DIR = "./public"
+    PUBLISH_BRANCH = "gh-pages"
+  }
+  secrets = ["ACTIONS_DEPLOY_KEY"]
 }
